@@ -7,7 +7,7 @@ CREATE USER IF NOT EXISTS 'miraiketai2020'@'%' IDENTIFIED BY 'miraiketai2020';
 GRANT ALL ON user.* TO miraiketai2020;
 
 ---- create tables ----
-USE michishirube;
+USE user;
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE IF NOT EXISTS `users`
