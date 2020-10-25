@@ -13,6 +13,6 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users`
 (
  `id`               VARCHAR(256),
- `pass`             VARCHAR(256) NOT NULL,
+ `pass`             BINARY(32) NOT NULL,
  PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
