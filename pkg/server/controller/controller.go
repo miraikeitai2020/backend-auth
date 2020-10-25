@@ -5,14 +5,14 @@ import(
 	"github.com/gin-gonic/gin"
 
 	// Import SQL driver
-	"github.com/jinzhu/gorm"
+	"github.com/miraikeitai2020/backend-auth/pkg/database"
 )
 
 type Controller struct {
-	DB	*gorm.DB
+	DB	*database.DB
 }
 
-func Init(db *gorm.DB) Controller {
+func Init(db *database.DB) Controller {
 	return Controller{
 		DB: db,
 	}
