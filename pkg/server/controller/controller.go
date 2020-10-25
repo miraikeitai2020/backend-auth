@@ -22,6 +22,40 @@ func Init(db *database.DB) Controller {
 }
 
 func (ctrl *Controller) SignInHandler(cxt *gin.Context) {
+	id := cxt.GetHeader("id")
+	if id == "" {
+		cxt.JSON(
+			http.StatusBadRequest,
+			view.MakeErrorResponse(http.StatusBadRequest, "id value is empty."),
+		)
+		return
+	}
+	pass := cxt.GetHeader("password")
+	if pass == "" {
+		cxt.JSON(
+			http.StatusBadRequest,
+			view.MakeErrorResponse(http.StatusBadRequest, "password value is empty."),
+		)
+		return
+	}
+	user := ctrl.DB.GetUserInfo(id)
+	if user.ID == "" {
+		cxt.JSON(
+			http.StatusBadRequest,
+			view.MakeErrorResponse(http.StatusBadRequest, id + " user is already exist."),
+		)
+		return
+	}
+	if user.Pass != hash.CreateHashString(pass) {
+		cxt.JSON(
+			http.StatusBadRequest,
+			view.MakeErrorResponse(http.StatusBadRequest, "password is not true."),
+		)
+		return
+	}
+	cxt.Writer.Header().Set("user-id", id)
+	cxt.Next()
+	cxt.Writer.WriteHeader(http.StatusOK)
 }
 
 func (ctrl *Controller) SignUpHandler(cxt *gin.Context) {
@@ -31,6 +65,7 @@ func (ctrl *Controller) SignUpHandler(cxt *gin.Context) {
 			http.StatusBadRequest,
 			view.MakeErrorResponse(http.StatusBadRequest, "id value is empty."),
 		)
+		return
 	}
 	pass := cxt.GetHeader("password")
 	if pass == "" {
@@ -38,6 +73,7 @@ func (ctrl *Controller) SignUpHandler(cxt *gin.Context) {
 			http.StatusBadRequest,
 			view.MakeErrorResponse(http.StatusBadRequest, "password value is empty."),
 		)
+		return
 	}
 	user := ctrl.DB.GetUserInfo(id)
 	if user.ID != "" {
@@ -45,6 +81,7 @@ func (ctrl *Controller) SignUpHandler(cxt *gin.Context) {
 			http.StatusBadRequest,
 			view.MakeErrorResponse(http.StatusBadRequest, id + " user is already exist."),
 		)
+		return
 	}
 	ctrl.DB.InsertUserInfo(
 		id, 
